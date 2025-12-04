@@ -38,7 +38,7 @@ public class StringUtilityTest {
     @Test
     public void testIsEmailAddressValid() {
         System.out.println("isEmailAddressValid");
-        String emailAddress = "user@aps.anl.gov";
+        String emailAddress = "user@lbl.gov";
         boolean expResult = true;
         boolean result = StringUtility.isEmailAddressValid(emailAddress);
         assertEquals(expResult, result);

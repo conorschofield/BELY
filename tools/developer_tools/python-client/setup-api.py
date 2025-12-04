@@ -20,8 +20,8 @@ setup(name='BELY-API',
       license='Copyright (c) UChicago Argonne, LLC. All rights reserved.',
       description='Python client API library used to communicate with BELY API.',
       maintainer='Dariusz Jarosz',
-      maintainer_email='djarosz@aps.anl.gov',
-      url='https://git.aps.anl.gov/controls/hla/bely',
+      maintainer_email='djarosz@lbl.gov',
+      url='https://git.lbl.gov/controls/hla/bely',
       entry_points={
         'console_scripts': [
           'bely-test = BelyApiFactory:run_command'

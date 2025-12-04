@@ -141,11 +141,11 @@ def get_cdb_logs(delta_minutes, logApi):
 @click.command()
 @click.option(
     "--cdb_server",
-    default="https://cdb.aps.anl.gov/cdb",
+    default="https://cdb.lbl.gov/cdb",
     help="Address of the CDB Server",
 )
 @click.option(
-    "--mqtt_server", default="cooper.aps.anl.gov", help="Address of the MQTT Server"
+    "--mqtt_server", default="cooper.lbl.gov", help="Address of the MQTT Server"
 )
 @click.option("--mqtt_port", default=1883, help="TCP Port Number for the MQTT Server")
 @click.option(

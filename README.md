@@ -10,7 +10,7 @@ In order to deploy or develop BELY, you must have some support software installe
     apt-get install wget gcc git make cmake build-essential libcurses-ocaml-dev curl expect mysql-server libmysqlclient-dev openssl libssl-dev libldap2-dev libsasl2-dev sed gawk unzip
 
 # Deployment
-For detailed deployment instructions please refer to our [administrators guide](https://confluence.aps.anl.gov/display/APSUCMS/Administrator+Guide).
+For detailed deployment instructions please refer to our [administrators guide](https://confluence.lbl.gov/display/APSUCMS/Administrator+Guide).
 
 **Deployment Procedure:**
 
@@ -41,7 +41,7 @@ For detailed deployment instructions please refer to our [administrators guide](
     
     
 # Development 
-For detailed development instructions please refer to our [developers guide](https://confluence.aps.anl.gov/display/APSUCMS/Developer+Guide). 
+For detailed development instructions please refer to our [developers guide](https://confluence.lbl.gov/display/APSUCMS/Developer+Guide). 
 
 **Getting Started with development:**
 

@@ -48,7 +48,7 @@ public class OpenNMSApi extends OpenNMSRestApi {
     }
     
      public static void main(String[] args) {
-        String webServiceUrl = "https://ctlinframon.aps.anl.gov:8443/opennms"; 
+        String webServiceUrl = "https://ctlinframon.lbl.gov:8443/opennms"; 
         String basicAuthUser = "admin2"; 
         String basicAuthPass = "admin"; 
         

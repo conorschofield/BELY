@@ -91,7 +91,7 @@ class BelyApiFactory:
 
 # def run_command():
 	# Example
-# 	print("\nEnter cdb URL (ex: https://cdb.aps.anl.gov/cdb): ")
+# 	print("\nEnter cdb URL (ex: https://cdb.lbl.gov/cdb): ")
 # 	hostname = input()
         
 # 	apiFactory = CdbApiFactory(hostname)

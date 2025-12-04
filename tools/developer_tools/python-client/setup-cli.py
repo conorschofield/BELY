@@ -36,7 +36,7 @@ setup(name='ComponentDB-CLI',
       license='Copyright (c) UChicago Argonne, LLC. All rights reserved.',
       description='Python APIs used to communicate with java hosted ComponentDB API.',
       maintainer='Dariusz Jarosz',
-      maintainer_email='djarosz@aps.anl.gov',
+      maintainer_email='djarosz@lbl.gov',
       url='https://github.com/AdvancedPhotonSource/ComponentDB',      
       entry_points={
         'console_scripts': [          

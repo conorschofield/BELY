@@ -85,7 +85,7 @@ echo "Checking service certificates"
 if [ ! -f $CDB_WEB_SERVICE_CERT_FILE -o ! -f $CDB_WEB_SERVICE_KEY_FILE ]; then
     echo "Creating CDB Web Service certificate"
     if [ ! -f $CDB_CA_DIR/certs/$CDB_WEB_SERVICE_HOST.crt ]; then
-        $MY_DIR/cdb_create_server_cert.sh $CDB_WEB_SERVICE_HOST $CDB_WEB_SERVICE_HOST cdb@aps.anl.gov || exit 1
+        $MY_DIR/cdb_create_server_cert.sh $CDB_WEB_SERVICE_HOST $CDB_WEB_SERVICE_HOST cdb@lbl.gov || exit 1
     fi
     rsync -ar $CDB_CA_DIR/certs/$CDB_WEB_SERVICE_HOST.crt $CDB_WEB_SERVICE_CERT_FILE
     rsync -ar $CDB_CA_DIR/certs/$CDB_WEB_SERVICE_HOST.key $CDB_WEB_SERVICE_KEY_FILE

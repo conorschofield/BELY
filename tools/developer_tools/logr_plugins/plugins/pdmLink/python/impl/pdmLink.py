@@ -11,7 +11,7 @@ See LICENSE file.
 Class that retrieves drawing information from Windchill PDMLink repository.
 
 Available Windchill classes:
-    http://windchill-dev.aps.anl.gov/Windchill/infoengine/jsp/tools/doc/index.jsp
+    http://windchill-dev.lbl.gov/Windchill/infoengine/jsp/tools/doc/index.jsp
 
 ********************************TESTING NOTES***********************************
 pdmLink = PdmLink(username, password, windchillUrl, icmsUrl, icmsUser, icmsPass)

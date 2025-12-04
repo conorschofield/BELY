@@ -24,6 +24,6 @@ test:
     - BelyApiFactory
 
 about:
-  home: "https://git.aps.anl.gov/controls/hla/bely"
+  home: "https://git.lbl.gov/controls/hla/bely"
   license: "Copyright (c) UChicago Argonne, LLC. All rights reserved."    
   summary: "Library Containing Component DB APIs"

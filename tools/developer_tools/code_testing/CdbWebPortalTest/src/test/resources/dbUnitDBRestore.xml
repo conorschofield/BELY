@@ -288,7 +288,7 @@
     <user_group id="1" name="CDB_ADMIN" description="System Admin Group"/>
     <user_group id="2" name="Some_User_Group" description=""/>
     <role_type id="1" name="group_settings_admin" description="Ability to edit view settings for a particular group."/>
-    <user_info id="1" username="cdb" first_name="CDB" last_name="System Account" email="cdb@aps.anl.gov" password="Jhcs$Tta7OK9Yw9LM6RZ8kkK9xHmpkze1Bgoy"/>
+    <user_info id="1" username="cdb" first_name="CDB" last_name="System Account" email="cdb@lbl.gov" password="Jhcs$Tta7OK9Yw9LM6RZ8kkK9xHmpkze1Bgoy"/>
     <user_info id="3" username="some_user" first_name="Some" last_name="User" middle_name="" email="" password="4aRz$BXg5ZxXdwogbf6gpRrkDfgOjpzXRiIiT" description=""/>
     <user_user_group user_id="1" user_group_id="1"/>
     <user_user_group user_id="3" user_group_id="2"/>

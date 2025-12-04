@@ -84,8 +84,8 @@ class ConfigurationManager:
             print("CDB Server.  You can add more server definitions by editing the cdb.conf file ")
             print("and following the <name> = <url> syntax ")
             print("Hit [Return] to accept defaults ")
-            prompt_string = "Enter the default CDB Server Address [https://cdb.aps.anl.gov/cdb]: "
-            cdb_server = input(prompt_string) or "https://cdb.aps.anl.gov/cdb"
+            prompt_string = "Enter the default CDB Server Address [https://cdb.lbl.gov/cdb]: "
+            cdb_server = input(prompt_string) or "https://cdb.lbl.gov/cdb"
             session_file = os.path.dirname(config_filename) + "/cdb_api_session"
 
             self.configuration = ConfigParser()

@@ -24,7 +24,7 @@ setup(name='cdb-api',
                 'cdb.common.client'],
       description='Python APIs used to communicate with Component Database',
       maintainer='Dariusz Jarosz',
-      maintainer_email='djarosz@aps.anl.gov',
+      maintainer_email='djarosz@lbl.gov',
       url='https://github.com/AdvancedPhotonSource/ComponentDB',
       entry_points={'console_scripts': [
           'cdb-add-item-log-entry = cdb.cdb_web_service.cli.addItemLogEntryCli:runCommand',
