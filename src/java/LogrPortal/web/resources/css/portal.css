@@ -13,7 +13,7 @@ html, body {
 }
 
 .apsStorageRingBackground {
-    background-image: url("../images/ApsStorageRing.png");
+    background-image: url("../images/AlsStorageRing.png");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;  
@@ -64,17 +64,17 @@ body .ui-galleria .ui-galleria-thumbnail-container {
     color: white;
 
     /* IE10 */
-    background-image: -ms-linear-gradient(top, #3b6591 0%, #34587f 100%);
+    background-image: -ms-linear-gradient(top, #00313C 0%, #00313C 100%);
     /* Mozilla Firefox */
-    background-image: -moz-linear-gradient(top, #3b6591 0%, #34587f 100%);
+    background-image: -moz-linear-gradient(top, #00313C 0%, #00313C 100%);
     /* Opera */
-    background-image: -o-linear-gradient(top, #3b6591 0%, #34587f 100%);
+    background-image: -o-linear-gradient(top, #00313C 0%, #00313C 100%);
     /* Webkit (Safari/Chrome 10) */
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #4e80b6), color-stop(1, #6da5d8));
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #00313C), color-stop(1, #00313C));
     /* Webkit (Chrome 11+) */
-    background-image: -webkit-linear-gradient(top, #3b6591 0%, #34587f 100%);
+    background-image: -webkit-linear-gradient(top, #00313C 0%, #00313C 100%);
     /* Proposed W3C Markup */
-    background-image: linear-gradient(top, #3b6591 0%, #34587f 100%);
+    background-image: linear-gradient(top, #00313C 0%, #00313C 100%);
 
     padding-top: 0px;
     padding-left: 15px;
@@ -555,7 +555,7 @@ h1 {
 }
 
 .homePage {
-    /*background-image: url(../../resources/images/ApsStorageRing.png);*/
+    /*background-image: url(../../resources/images/AlsStorageRing.png);*/
     background-repeat: no-repeat;
     background-position: center;
     background-size: auto 100%;

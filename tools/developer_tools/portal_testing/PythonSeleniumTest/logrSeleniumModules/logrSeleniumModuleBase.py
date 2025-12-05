@@ -337,7 +337,7 @@ class LogrSeleniumModuleBase:
 
 		test.assertEqual(value_element.text, prop_value_text, msg='%s found but expected %s for new property value.' % (value_element.text,prop_value_text ))
 
-	def _add_image_to_item(self, form_name, entity_name, sample_file_name='LBNLLogo.png', needs_toggler=True):
+	def _add_image_to_item(self, form_name, entity_name, sample_file_name='ALSLogo.png', needs_toggler=True):
 		if needs_toggler:
 			toggle_id = "%s:%sViewGalleryPanel_toggler" % (form_name, entity_name)
 			self._click_on_id(toggle_id)
