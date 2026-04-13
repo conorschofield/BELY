@@ -32,7 +32,7 @@ See LICENSE file.
             <p:calendar id="effectiveToDate" 
                         value="#{logObject.effectiveToDateTime}" /> 
 
-            <h:outputLabel for="logTopicValue" value="Log Topic" styleClass="entityDataEmphasizedLabel"/>
+            <h:outputLabel for="logTopicValue" value="Category" styleClass="entityDataEmphasizedLabel"/>
             <p:selectOneMenu id="logTopicValue" value="#{logObject.logTopic}" styleClass="entityDataText">
                 <f:selectItem itemLabel="Select" noSelectionOption="true"/>
                 <f:selectItems var="topic" value="#{logTopicController.availableItems}" itemLabel="#{topic.name}" itemValue="#{topic}"/>

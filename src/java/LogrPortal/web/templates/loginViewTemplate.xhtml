@@ -11,7 +11,7 @@ See LICENSE file.
     <h:head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link href="../resources/css/login.css" rel="stylesheet" type="text/css" />
-        <link rel="icon" type="image/png" href="../resources/images/anl.ico" />
+        <link rel="icon" type="image/png" href="../resources/images/#{resources.OrgFavicon}" />
         <title>#{resources.CdbPortalTitle}: Login Page</title>
     </h:head>
 
@@ -19,7 +19,7 @@ See LICENSE file.
         <div id="top" class="topContent">
             <div id="topLeft" class="topLeftContent">
                 <ui:insert name="topLeft">
-                    <h:graphicImage alt="ANL Logo" url="../resources/images/AnlLogo167x75.png"/>
+                    <h:graphicImage alt="#{resources.OrgLogoAlt}" url="../resources/images/#{resources.OrgLogoImage}"/>
                 </ui:insert>
             </div>
             <div>
@@ -38,7 +38,7 @@ See LICENSE file.
             <ui:insert name="bottom">
             </ui:insert>
             <footer>
-                <h:outputText value="Copyright &#169; 2014-2015 UChicago Argonne, LLC"/>   
+                <h:outputText value="Copyright &#169; #{resources.CdbCopyrightNotice}"/>   
             </footer>
         </div>
 

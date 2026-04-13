@@ -86,7 +86,7 @@ See LICENSE file.
         <h:outputText value="#{logObject.enteredByUser.username}"/>
     </p:column>
 
-    <p:column sortBy="#{logObject.logTopic.name}" headerText="Topic" 
+    <p:column sortBy="#{logObject.logTopic.name}" headerText="Category"
               filterBy="#{logObject.logTopic.name}" filterMatchMode="exact"
               filterOptions="#{logTopicController.availableItemsForSelectOne}"
               filterValue="#{logSettingObject.filterByTopic}"

@@ -197,6 +197,7 @@ STATIC_LOGR_DB_TABLES="\
     relationship_type \
     notification_provider \
     notification_handler_config_key \
+    log_topic \
 "
 
 executePopulateScripts "$STATIC_LOGR_DB_TABLES"

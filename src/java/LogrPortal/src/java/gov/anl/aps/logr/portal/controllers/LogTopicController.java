@@ -46,7 +46,7 @@ public class LogTopicController extends CdbEntityController<LogTopicControllerUt
 
     @Override
     protected LogTopicSettings createNewSettingObject() {
-        return new LogTopicSettings(); 
+        return new LogTopicSettings(this);
     }
 
     @Override

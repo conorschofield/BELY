@@ -41,7 +41,7 @@ See LICENSE file.
         <p:tooltip for="user" value="Original user cannot be modified."/>
     </p:column>
 
-    <p:column sortBy="#{logObject.logTopic}" headerText="Topic" 
+    <p:column sortBy="#{logObject.logTopic}" headerText="Category"
               rendered="#{logSettingObject.displayTopic}">
         <p:selectOneMenu id="topic" value="#{logObject.logTopic}" styleClass="entityDataText">
             <f:selectItem itemLabel="Select" noSelectionOption="true"/>

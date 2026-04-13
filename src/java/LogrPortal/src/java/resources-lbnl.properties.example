@@ -1,0 +1,38 @@
+# =============================================================================
+# LBNL (Lawrence Berkeley National Laboratory) Branding Configuration
+# =============================================================================
+# To use this configuration:
+#   1. Copy this file to resources.properties (replacing the default)
+#   2. Ensure LBNL/ALS logo images and favicon are in:
+#      src/java/LogrPortal/web/resources/images/
+#   3. Rebuild and redeploy the application
+# =============================================================================
+
+CdbSoftwareVersion=Development
+CdbSoftwareVersionUrl=https://github.com/AdvancedPhotonSource/BELY
+CdbBugReportUrl=https://github.com/AdvancedPhotonSource/BELY/issues/new
+CdbCodeRepository=https://github.com/AdvancedPhotonSource/BELY
+CdbPortalTitle=Logbook Portal
+CdbCopyrightNotice=2024 The Regents of the University of California
+
+# =============================================================================
+# Organization Branding
+# =============================================================================
+OrgLogoImage=LBNLLogo167x46.png
+OrgLogoAlt=LBNL Logo
+OrgFavicon=als.ico
+OrgName=LBNL
+OrgAboutTitle=About BELY
+OrgAboutDescription=Best Electronic Logbook Yet (BELY) serves as an essential logbook application at Lawrence Berkeley National Laboratory (LBNL). Its primary purpose is to facilitate the organized recording of logbook entries, with an emphasis on chronological organization and the ability to group entries by task or shift. BELY offers exceptional flexibility by allowing users to define their own properties, tailoring the logbook to suit their specific requirements. Additionally, it provides robust search features, enhancing the efficiency of logbook entry retrieval and analysis.
+
+# =============================================================================
+# UI Settings (these typically don't need to change per-org)
+# =============================================================================
+SelectDataTableNumberOfRows=10
+DialogDataTableNumberOfRows=5
+DialogSearchResultsDataTableNumberOfRows=19
+DisplayFiltersForViewDataTablesWithNumberOfRows=10
+InventoryNoScrollboxMaximum=6
+MdReorderNoScrollboxMaximum=22
+EnabledMAARCDomainFunctionality=True
+EnabledMachineInventoryFunctionality=False

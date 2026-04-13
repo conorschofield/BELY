@@ -34,6 +34,7 @@ import gov.anl.aps.logr.portal.model.db.entities.Item;
 import gov.anl.aps.logr.portal.model.db.entities.ItemDomainLogbook;
 import gov.anl.aps.logr.portal.model.db.entities.ItemElement;
 import gov.anl.aps.logr.portal.model.db.entities.ItemType;
+import gov.anl.aps.logr.portal.model.db.entities.ListTbl;
 import gov.anl.aps.logr.portal.model.db.entities.Log;
 import gov.anl.aps.logr.portal.model.db.entities.LogReaction;
 import gov.anl.aps.logr.portal.model.db.entities.PropertyType;
@@ -46,6 +47,7 @@ import gov.anl.aps.logr.portal.model.db.utilities.LogUtility;
 import gov.anl.aps.logr.portal.utilities.MarkdownParser;
 import gov.anl.aps.logr.portal.utilities.SearchResult;
 import gov.anl.aps.logr.portal.utilities.SessionUtility;
+import org.primefaces.PrimeFaces;
 import gov.anl.aps.logr.portal.view.objects.GroupedReaction;
 import gov.anl.aps.logr.portal.view.objects.ItemDomainLogbookHomeObject;
 import java.io.IOException;
@@ -562,6 +564,10 @@ public class ItemDomainLogbookController extends ItemController<ItemDomainLogboo
     }
 
     public void prepareEditLogEntry(Log entry) {
+        if (settingObject.getDisplayEditDisabled()) {
+            SessionUtility.addErrorMessage("Edit Disabled", "Editing log entries is disabled.");
+            return;
+        }
         if (isSaveLogLockoutsForCurrent(entry)) {
             // Fetch latest log entry in db. 
             Log updatedEntry = logFacade.find(entry.getId());
@@ -721,7 +727,7 @@ public class ItemDomainLogbookController extends ItemController<ItemDomainLogboo
 
         lastLog = newLogEdit;
         if (newLogEdit.getId() == null) {
-            // New log entry 
+            // New log entry
             List<ItemElement> itemElementList = newLogEdit.getItemElementList();
             ItemDomainLogbook parentItem = (ItemDomainLogbook) itemElementList.get(0).getParentItem();
 

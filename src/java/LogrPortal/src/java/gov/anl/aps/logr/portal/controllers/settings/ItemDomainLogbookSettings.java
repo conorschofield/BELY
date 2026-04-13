@@ -33,11 +33,14 @@ public class ItemDomainLogbookSettings extends ItemSettings<ItemDomainLogbookCon
     private static final String DisplayPropertyTypeId4SettingTypeKey = "ItemDomainLogbook.List.Display.PropertyTypeId4";
     private static final String DisplayPropertyTypeId5SettingTypeKey = "ItemDomainLogbook.List.Display.PropertyTypeId5";
     
+    private static final String DisplayEditDisabledSettingTypeKey = "ItemDomainLogbook.List.Display.EditDisabled";
+
     // Home page settings
-    public static final String DisplayLogbookTypeId1Key = "ItemDomainLogbook.Home.EntityTypeId1";    
-    public static final String DisplayLogbookTypeId2Key = "ItemDomainLogbook.Home.EntityTypeId2";    
-    public static final String DisplayLogbookTypeId3Key = "ItemDomainLogbook.Home.EntityTypeId3";  
-    
+    public static final String DisplayLogbookTypeId1Key = "ItemDomainLogbook.Home.EntityTypeId1";
+    public static final String DisplayLogbookTypeId2Key = "ItemDomainLogbook.Home.EntityTypeId2";
+    public static final String DisplayLogbookTypeId3Key = "ItemDomainLogbook.Home.EntityTypeId3";
+
+    protected Boolean displayEditDisabled = false;
     protected Integer displayHomeLogbookTypeId1 = null;
     protected Integer displayHomeLogbookTypeId2 = null;
     protected Integer displayHomeLogbookTypeId3 = null;
@@ -66,9 +69,11 @@ public class ItemDomainLogbookSettings extends ItemSettings<ItemDomainLogbookCon
         displayPropertyTypeId4 = parseSettingValueAsInteger(settingTypeMap.get(DisplayPropertyTypeId4SettingTypeKey).getDefaultValue());
         displayPropertyTypeId5 = parseSettingValueAsInteger(settingTypeMap.get(DisplayPropertyTypeId5SettingTypeKey).getDefaultValue());
         
-        displayHomeLogbookTypeId1 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId1Key).getDefaultValue());        
-        displayHomeLogbookTypeId2 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId2Key).getDefaultValue());        
-        displayHomeLogbookTypeId3 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId3Key).getDefaultValue());        
+        displayEditDisabled = Boolean.valueOf(settingTypeMap.get(DisplayEditDisabledSettingTypeKey).getDefaultValue());
+
+        displayHomeLogbookTypeId1 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId1Key).getDefaultValue());
+        displayHomeLogbookTypeId2 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId2Key).getDefaultValue());
+        displayHomeLogbookTypeId3 = parseSettingValueAsInteger(settingTypeMap.get(DisplayLogbookTypeId3Key).getDefaultValue());
     }
 
     public void resetLogbookHomeSettings(SettingEntity settingEntity) {
@@ -103,6 +108,8 @@ public class ItemDomainLogbookSettings extends ItemSettings<ItemDomainLogbookCon
         displayPropertyTypeId4 = settingEntity.getSettingValueAsInteger(DisplayPropertyTypeId4SettingTypeKey, displayPropertyTypeId4);
         displayPropertyTypeId5 = settingEntity.getSettingValueAsInteger(DisplayPropertyTypeId5SettingTypeKey, displayPropertyTypeId5);            
         
+        displayEditDisabled = settingEntity.getSettingValueAsBoolean(DisplayEditDisabledSettingTypeKey, displayEditDisabled);
+
         displayHomeLogbookTypeId1 = settingEntity.getSettingValueAsInteger(DisplayLogbookTypeId1Key, displayHomeLogbookTypeId1);
         displayHomeLogbookTypeId2 = settingEntity.getSettingValueAsInteger(DisplayLogbookTypeId2Key, displayHomeLogbookTypeId2);
         displayHomeLogbookTypeId3 = settingEntity.getSettingValueAsInteger(DisplayLogbookTypeId3Key, displayHomeLogbookTypeId3);
@@ -111,6 +118,7 @@ public class ItemDomainLogbookSettings extends ItemSettings<ItemDomainLogbookCon
     @Override
     protected void saveSettingsForSessionSettingEntity(SettingEntity settingEntity) {
         super.saveSettingsForSessionSettingEntity(settingEntity);
+        settingEntity.setSettingValue(DisplayEditDisabledSettingTypeKey, displayEditDisabled);
         settingEntity.setSettingValue(DisplayNumberOfItemsPerPageSettingTypeKey, displayNumberOfItemsPerPage);
         settingEntity.setSettingValue(DisplayIdSettingTypeKey, displayId);
 
@@ -155,6 +163,14 @@ public class ItemDomainLogbookSettings extends ItemSettings<ItemDomainLogbookCon
 
     public void setDisplayHomeLogbookTypeId3(Integer displayHomeLogbookTypeId3) {
         this.displayHomeLogbookTypeId3 = displayHomeLogbookTypeId3;
+    }
+
+    public Boolean getDisplayEditDisabled() {
+        return displayEditDisabled;
+    }
+
+    public void setDisplayEditDisabled(Boolean displayEditDisabled) {
+        this.displayEditDisabled = displayEditDisabled;
     }
 
 }

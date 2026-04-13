@@ -63,7 +63,7 @@ See LICENSE file.
         <div class="logFooter">                                                                        
             <p:commandLink styleClass="logAction-left fa fa-link-icon fa-pencil logEditButton"
                            onclick="PF('loadingDialog').show()"
-                           rendered="#{isEntityWriteable}"
+                           rendered="#{isEntityWriteable and !itemDomainLogbookController.settingObject.displayEditDisabled}"
                            action="#{itemDomainLogbookController.prepareEditLogEntry(logObject)}"
                            update="@form:#{entityTypeName}LogbookLogAddDialog"
                            oncomplete="PF('loadingDialog').hide(); 

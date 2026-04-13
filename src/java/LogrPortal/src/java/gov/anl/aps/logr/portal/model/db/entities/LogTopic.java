@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,6 +48,8 @@ public class LogTopic extends CdbEntity implements Serializable {
     private String name;
     @Size(max = 256)
     private String description;
+    @Column(name = "email_list")
+    private String emailList;
     @OneToMany(mappedBy = "logTopic")
     private List<Log> logList;
 
@@ -84,6 +87,14 @@ public class LogTopic extends CdbEntity implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getEmailList() {
+        return emailList;
+    }
+
+    public void setEmailList(String emailList) {
+        this.emailList = emailList;
     }
 
     @XmlTransient

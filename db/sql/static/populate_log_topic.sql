@@ -1,0 +1,37 @@
+LOCK TABLES `log_topic` WRITE;
+/*!40000 ALTER TABLE `log_topic` DISABLE KEYS */;
+INSERT INTO `log_topic` (`name`) VALUES
+('AC Cord Cap'),
+('Accelerator Controls'),
+('Accelerator Physics'),
+('APEX'),
+('Beamline Activities'),
+('Beamline Controls'),
+('Computer Security'),
+('Electronics Installation'),
+('Electronics Maintenance'),
+('EPS'),
+('Injection & Tuning'),
+('Insertion Device'),
+('Instrumentation'),
+('LFB/TFB/BC'),
+('LOTO'),
+('Network Support'),
+('Operations'),
+('PC Support'),
+('Power Supplies'),
+('Radiation'),
+('RF'),
+('RF Maintenance'),
+('Safety - Environmental Health and Safety'),
+('Safety Interlocks'),
+('Test'),
+('Timing'),
+('Top Off RSS'),
+('Unix Support'),
+('User Feedback'),
+('User Services'),
+('Water and Air'),
+('Web Support');
+/*!40000 ALTER TABLE `log_topic` ENABLE KEYS */;
+UNLOCK TABLES;

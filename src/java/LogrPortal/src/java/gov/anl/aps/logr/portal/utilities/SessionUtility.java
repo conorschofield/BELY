@@ -344,6 +344,8 @@ public class SessionUtility {
             logger.error(ex);
         } catch (NoClassDefFoundError ex) {
             logger.error(ex);
+        } catch (ClassCastException ex) {
+            logger.warn("MQTT resource is not a MQTTConnectionFactory (MQTT not configured): " + ex.getMessage());
         }
         return null;
 

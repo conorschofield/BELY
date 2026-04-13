@@ -20,6 +20,7 @@ INSERT INTO `setting_type` VALUES
 (16,'ItemDomainLogbook.Home.EntityTypeId1','1st entityType Id to show up on the home page.',''),
 (17,'ItemDomainLogbook.Home.EntityTypeId2','2nd entityType Id to show up on the home page.',''),
 (18,'ItemDomainLogbook.Home.EntityTypeId3','3rd entityType Id to show up on the home page.',''),
+(19,'ItemDomainLogbook.List.Display.EditDisabled','Disable editing of log entries globally.','false'),
 (999,'DomainEntity.Detail.Display.GalleryViewableDocuments','Display viewable documents in the gallery.','true'),
 (1000,'AllowedPropertyValue.List.Display.Description','Display allowed property value description.','false'),
 (1001,'AllowedPropertyValue.List.Display.Id','Display allowed property value id.','false'),

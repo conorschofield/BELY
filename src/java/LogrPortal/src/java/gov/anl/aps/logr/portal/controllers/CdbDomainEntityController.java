@@ -518,11 +518,17 @@ public abstract class CdbDomainEntityController<ControllerUtility extends CdbDom
 
     public Log getNewLogEdit() {
         EntityType current = getCurrent();
+        if (current == null) {
+            return null;
+        }
         return current.getNewLogEdit();
     }
 
     public void setNewLogEdit(Log newLogEdit) {
         EntityType current = getCurrent();
+        if (current == null) {
+            return;
+        }
         current.setNewLogEdit(newLogEdit);
     }
 
