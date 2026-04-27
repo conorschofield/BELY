@@ -14,6 +14,7 @@ import gov.anl.aps.logr.portal.model.db.entities.CdbEntity;
 import gov.anl.aps.logr.portal.model.db.entities.Log;
 import gov.anl.aps.logr.portal.model.db.entities.LogLevel;
 import gov.anl.aps.logr.portal.model.db.entities.UserInfo;
+import gov.anl.aps.logr.portal.utilities.EmailNotificationUtility;
 import java.util.Date;
 import javax.ejb.EJB;
 
@@ -150,9 +151,10 @@ public class LogControllerUtility extends CdbEntityControllerUtility<Log, LogFac
     public Log saveLogEntry(Log log, UserInfo userInfo) throws CdbException {
         if (log.getId() != null) {
             return update(log, userInfo);
-        } else {
-            return create(log, userInfo);
         }
+        Log created = create(log, userInfo);
+        EmailNotificationUtility.sendLogEntryNotification(created);
+        return created;
     }
 
 }
