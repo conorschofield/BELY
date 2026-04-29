@@ -81,7 +81,7 @@ public abstract class CdbEntityController<ControllerUtility extends CdbEntityCon
     protected List<EntityType> selectedObjectList = null;
 
     protected String logText = null;
-    protected Integer logTopicId = null;
+    protected List<Integer> logTopicIds = null;
 
     protected String breadcrumbViewParam = null;
     protected String breadcrumbObjectIdViewParam = null;
@@ -150,7 +150,7 @@ public abstract class CdbEntityController<ControllerUtility extends CdbEntityCon
      */
     public void resetLogText() {
         logText = "";
-        logTopicId = null;
+        logTopicIds = null;
     }
 
     /**
@@ -1561,9 +1561,15 @@ public abstract class CdbEntityController<ControllerUtility extends CdbEntityCon
         Log logEntry = null;
         if (logText != null && !logText.isEmpty()) {
             logEntry = LogUtility.createLogEntry(logText);
-            if (logTopicId != null) {
-                LogTopic logTopic = logTopicFacade.find(logTopicId);
-                logEntry.setLogTopic(logTopic);
+            if (logTopicIds != null && !logTopicIds.isEmpty()) {
+                List<LogTopic> topics = new java.util.ArrayList<>();
+                for (Integer id : logTopicIds) {
+                    LogTopic t = logTopicFacade.find(id);
+                    if (t != null) {
+                        topics.add(t);
+                    }
+                }
+                logEntry.setLogTopicList(topics);
             }
             resetLogText();
         }
@@ -1681,12 +1687,12 @@ public abstract class CdbEntityController<ControllerUtility extends CdbEntityCon
         this.logText = logText;
     }
 
-    public Integer getLogTopicId() {
-        return logTopicId;
+    public List<Integer> getLogTopicIds() {
+        return logTopicIds;
     }
 
-    public void setLogTopicId(Integer logTopicId) {
-        this.logTopicId = logTopicId;
+    public void setLogTopicIds(List<Integer> logTopicIds) {
+        this.logTopicIds = logTopicIds;
     }
 
     public SettingObject getSettingObject() {

@@ -9,7 +9,9 @@ import gov.anl.aps.logr.portal.model.db.entities.LogTopic;
 import gov.anl.aps.logr.portal.model.db.entities.UserInfo;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -51,13 +53,8 @@ public class EmailNotificationUtility {
      * @param log the newly-created log entry
      */
     public static void sendLogEntryNotification(Log log) {
-        LogTopic topic = log.getLogTopic();
-        if (topic == null) {
-            return;
-        }
-
-        String emailListRaw = topic.getEmailList();
-        if (emailListRaw == null || emailListRaw.trim().isEmpty()) {
+        List<LogTopic> topics = log.getLogTopicList();
+        if (topics == null || topics.isEmpty()) {
             return;
         }
 
@@ -68,22 +65,38 @@ public class EmailNotificationUtility {
             return;
         }
 
-        List<InternetAddress> recipients = parseEmailList(emailListRaw);
+        // Collect unique recipient addresses across all categories
+        Set<String> seenAddresses = new LinkedHashSet<>();
+        List<InternetAddress> recipients = new ArrayList<>();
+        List<String> categoryNames = new ArrayList<>();
+
+        for (LogTopic topic : topics) {
+            String emailListRaw = topic.getEmailList();
+            if (emailListRaw == null || emailListRaw.trim().isEmpty()) {
+                continue;
+            }
+            categoryNames.add(topic.getName());
+            for (InternetAddress addr : parseEmailList(emailListRaw)) {
+                String canonical = addr.getAddress().toLowerCase();
+                if (seenAddresses.add(canonical)) {
+                    recipients.add(addr);
+                }
+            }
+        }
+
         if (recipients.isEmpty()) {
-            logger.warn("Category '{}' has an email list but no valid addresses could be parsed: {}",
-                    topic.getName(), emailListRaw);
             return;
         }
 
         try {
             Session mailSession = buildMailSession(smtpHost);
-            MimeMessage msg = buildMessage(mailSession, log, recipients);
+            MimeMessage msg = buildMessage(mailSession, log, recipients, categoryNames);
             Transport.send(msg);
-            logger.info("Sent category email notification for log entry {} (category: '{}') to {} recipient(s).",
-                    log.getId(), topic.getName(), recipients.size());
+            logger.info("Sent category email notification for log entry {} (categories: {}) to {} recipient(s).",
+                    log.getId(), categoryNames, recipients.size());
         } catch (MessagingException ex) {
-            logger.error("Failed to send email notification for log entry {} (category: '{}'): {}",
-                    log.getId(), topic.getName(), ex.getMessage());
+            logger.error("Failed to send email notification for log entry {}: {}",
+                    log.getId(), ex.getMessage());
         }
     }
 
@@ -119,14 +132,13 @@ public class EmailNotificationUtility {
         return Session.getInstance(props);
     }
 
-    private static MimeMessage buildMessage(Session session, Log log, List<InternetAddress> recipients)
-            throws MessagingException {
+    private static MimeMessage buildMessage(Session session, Log log, List<InternetAddress> recipients,
+            List<String> categoryNames) throws MessagingException {
 
         String fromAddress = ConfigurationUtility.getPortalProperty(PROP_FROM, "bely-noreply@localhost");
         String baseUrl     = ConfigurationUtility.getPortalProperty(PROP_BASE_URL, "");
 
-        LogTopic topic = log.getLogTopic();
-        String categoryName = topic.getName();
+        String categoriesDisplay = String.join(", ", categoryNames);
 
         UserInfo author = log.getEnteredByUser();
         String authorName = (author != null) ? author.getUsername() : "Unknown";
@@ -134,18 +146,21 @@ public class EmailNotificationUtility {
         String entryText = (log.getText() != null) ? log.getText() : "";
         Date enteredOn   = log.getEnteredOnDateTime();
 
-        // Subject
-        String subject = "[BELY] [" + categoryName + "] New log entry by " + authorName;
+        // Subject: use first category name for brevity; show all if multiple
+        String subjectCategory = categoryNames.size() == 1
+                ? categoryNames.get(0)
+                : categoryNames.get(0) + " (+" + (categoryNames.size() - 1) + " more)";
+        String subject = "[BELY] [" + subjectCategory + "] New log entry by " + authorName;
 
         // Plain-text body
         StringBuilder body = new StringBuilder();
         body.append("A new log entry has been posted.\n");
         body.append("\n");
-        body.append("Category : ").append(categoryName).append("\n");
-        body.append("Author   : ").append(authorName).append("\n");
-        body.append("Posted   : ").append(enteredOn != null ? enteredOn.toString() : "unknown").append("\n");
+        body.append("Categories: ").append(categoriesDisplay).append("\n");
+        body.append("Author    : ").append(authorName).append("\n");
+        body.append("Posted    : ").append(enteredOn != null ? enteredOn.toString() : "unknown").append("\n");
         if (!baseUrl.isEmpty() && log.getId() != null) {
-            body.append("View     : ").append(baseUrl).append("\n");
+            body.append("View      : ").append(baseUrl).append("\n");
         }
         body.append("\n");
         body.append("--- Log Entry ---\n");

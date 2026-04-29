@@ -53,7 +53,11 @@ public class LogUtility {
 
     public static Log createLogEntry(String logText, LogTopic logTopic) {
         Log logEntry = createLogEntry(logText);
-        logEntry.setLogTopic(logTopic);
+        if (logTopic != null) {
+            List<LogTopic> topics = new java.util.ArrayList<>();
+            topics.add(logTopic);
+            logEntry.setLogTopicList(topics);
+        }
         return logEntry;
     }
 

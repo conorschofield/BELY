@@ -86,24 +86,21 @@ See LICENSE file.
         <h:outputText value="#{logObject.enteredByUser.username}"/>
     </p:column>
 
-    <p:column sortBy="#{logObject.logTopic.name}" headerText="Category"
-              filterBy="#{logObject.logTopic.name}" filterMatchMode="exact"
-              filterOptions="#{logTopicController.availableItemsForSelectOne}"
-              filterValue="#{logSettingObject.filterByTopic}"
-              filterStyle="width:40px"
-              filterable="#{filterable}"
-              sortable="#{sortable}"
-              style="width:50px"
+    <p:column headerText="Category"
+              filterable="false"
+              sortable="false"
+              style="width:80px"
               rendered="#{logSettingObject.displayTopic}">
         <p:cellEditor>
             <f:facet name="output">
-                <h:outputText value="#{logObject.logTopic.name}"/>
+                <ui:repeat var="cat" value="#{logObject.logTopicList}" varStatus="status">
+                    <h:outputText value="#{cat.name}"/><h:outputText value=", " rendered="#{!status.last}"/>
+                </ui:repeat>
             </f:facet>
             <f:facet name="input">
-                <p:selectOneMenu id="topic" value="#{logObject.logTopic}" styleClass="entityDataText">
-                    <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                <p:selectCheckboxMenu id="topic" value="#{logObject.logTopicList}" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
                     <f:selectItems var="topic" value="#{logTopicController.availableItems}" itemLabel="#{topic.name}" itemValue="#{topic}"/>
-                </p:selectOneMenu>
+                </p:selectCheckboxMenu>
             </f:facet>
         </p:cellEditor>
     </p:column>

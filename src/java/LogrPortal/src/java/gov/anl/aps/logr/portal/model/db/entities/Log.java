@@ -107,9 +107,11 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
     private List<Log> childLogList;    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "log")
     private List<LogReaction> logReactionList;    
-    @JoinColumn(name = "log_topic_id", referencedColumnName = "id")
-    @ManyToOne
-    private LogTopic logTopic;
+    @JoinTable(name = "log_log_topic", joinColumns = {
+        @JoinColumn(name = "log_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "log_topic_id", referencedColumnName = "id")})
+    @ManyToMany()
+    private List<LogTopic> logTopicList;
     
     private static transient SimpleDateFormat shortDisplayDateFormat = new SimpleDateFormat("MM/dd/yy HH:mm");
     private transient String htmlText; 
@@ -233,13 +235,14 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
         this.logReactionList = logReactionList;
     }   
 
+    @XmlTransient
     @JsonIgnore
-    public LogTopic getLogTopic() {
-        return logTopic;
+    public List<LogTopic> getLogTopicList() {
+        return logTopicList;
     }
 
-    public void setLogTopic(LogTopic logTopic) {
-        this.logTopic = logTopic;
+    public void setLogTopicList(List<LogTopic> logTopicList) {
+        this.logTopicList = logTopicList;
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
@@ -299,14 +302,6 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
         this.enteredByUser = enteredByUserId;
     }
 
-    @JsonIgnore
-    public LogTopic getLogTopicId() {
-        return logTopic;
-    }
-
-    public void setLogTopicId(LogTopic logTopicId) {
-        this.logTopic = logTopicId;
-    }
     
     @JsonIgnore
     public String getShortDisplayEnteredOnDateTime() {

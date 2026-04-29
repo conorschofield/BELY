@@ -68,10 +68,9 @@ See LICENSE file.
                         <h:outputLabel for="logbookLogCategoryValue" value="Category" styleClass="entityDataEmphasizedLabel"/>
                     </p:column>
                     <p:column>
-                        <p:selectOneMenu id="logbookLogCategoryValue" value="#{logObject.logTopic}" styleClass="entityDataText">
-                            <f:selectItem itemLabel="Select" noSelectionOption="true"/>
+                        <p:selectCheckboxMenu id="logbookLogCategoryValue" value="#{logObject.logTopicList}" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
                             <f:selectItems var="topic" value="#{logTopicController.availableItems}" itemLabel="#{topic.name}" itemValue="#{topic}"/>
-                        </p:selectOneMenu>
+                        </p:selectCheckboxMenu>
                     </p:column>
                 </p:row>
 

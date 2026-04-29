@@ -15,7 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -50,7 +50,7 @@ public class LogTopic extends CdbEntity implements Serializable {
     private String description;
     @Column(name = "email_list")
     private String emailList;
-    @OneToMany(mappedBy = "logTopic")
+    @ManyToMany(mappedBy = "logTopicList")
     private List<Log> logList;
 
     public LogTopic() {
