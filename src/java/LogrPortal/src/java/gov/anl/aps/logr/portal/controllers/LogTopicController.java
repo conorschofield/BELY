@@ -54,21 +54,41 @@ public class LogTopicController extends CdbEntityController<LogTopicControllerUt
         return new LogTopicControllerUtility(); 
     }
 
-    @FacesConverter(forClass = LogTopic.class)
+    /**
+     * JSF converter for LogTopic entities.
+     *
+     * Registered both as forClass (for single-value bindings JSF can type-infer)
+     * AND under the explicit name "logTopicConverter" (for multi-value bindings
+     * like selectCheckboxMenu/List, where generic erasure prevents JSF from
+     * discovering the element type — those bindings must reference this
+     * converter via converter="logTopicConverter").
+     */
+    @FacesConverter(value = "logTopicConverter", forClass = LogTopic.class)
     public static class LogTopicControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            // NOTE: This converter intentionally returns null on failure rather
+            // than throwing ConverterException. Throwing here causes silent
+            // form-validation rejection on save (no <p:messages> on the add-log
+            // dialog to surface the error). Returning null is safe because
+            // Log.setLogTopicList strips null elements defensively, so a failed
+            // conversion at worst loses a category instead of corrupting the
+            // persistence context with a null collection element. Any null
+            // return is logged at WARN below for diagnosability.
             try {
                 if (value == null || value.length() == 0) {
                     return null;
                 }
                 LogTopicController controller = (LogTopicController) facesContext.getApplication().getELResolver().
                         getValue(facesContext.getELContext(), null, "logTopicController");
-                return controller.getEntity(getIntegerKey(value));
+                LogTopic resolved = controller.getEntity(getIntegerKey(value));
+                if (resolved == null) {
+                    logger.warn("No LogTopic found for id '{}' — dropping from selection", value);
+                }
+                return resolved;
             } catch (Exception ex) {
-                // we cannot get entity from a given key
-                logger.warn("Value " + value + " cannot be converted to log topic object.");
+                logger.warn("Value '{}' cannot be converted to LogTopic — dropping from selection", value, ex);
                 return null;
             }
         }

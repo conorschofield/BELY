@@ -112,7 +112,7 @@ INSERT INTO `setting_type` VALUES
 (9002,'Log.List.Display.EnteredByUser','Display log entry entered by user.','true'),
 (9003,'Log.List.Display.Id','Display log entry id.','false'),
 (9004,'Log.List.Display.NumberOfItemsPerPage','Display specified number of items per page.','25'),
-(9005,'Log.List.Display.Topic','Display log topic.','false'),
+(9005,'Log.List.Display.Topic','Display log topic.','true'),
 (9006,'Log.List.FilterBy.EnteredOnDateTime','Filter for log entry entered on date/time.',NULL),
 (9007,'Log.List.FilterBy.EnteredByUser','Filter for log entry entered by user.',NULL),
 (9008,'Log.List.FilterBy.Text','Filter for log entry text.',NULL),

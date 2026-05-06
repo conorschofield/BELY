@@ -33,7 +33,7 @@ See LICENSE file.
                         value="#{logObject.effectiveToDateTime}" /> 
 
             <h:outputLabel for="logTopicValue" value="Category" styleClass="entityDataEmphasizedLabel"/>
-            <p:selectCheckboxMenu id="logTopicValue" value="#{logObject.logTopicList}" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
+            <p:selectCheckboxMenu id="logTopicValue" value="#{logObject.logTopicList}" converter="logTopicConverter" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
                 <f:selectItems var="topic" value="#{logTopicController.availableItems}" itemLabel="#{topic.name}" itemValue="#{topic}"/>
             </p:selectCheckboxMenu>
 

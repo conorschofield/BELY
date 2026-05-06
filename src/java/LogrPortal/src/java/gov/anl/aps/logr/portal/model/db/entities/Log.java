@@ -241,8 +241,42 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
         return logTopicList;
     }
 
+    /**
+     * Set the list of LogTopic categories on this Log entity.
+     *
+     * Defensively strips null elements AND non-LogTopic elements before
+     * storing. JSF/PrimeFaces can hand us a list containing raw String IDs
+     * when a selectCheckboxMenu binding to List&lt;LogTopic&gt; doesn't have an
+     * explicit converter wired up — generic erasure prevents JSF from
+     * discovering the element type and applying forClass converters.
+     *
+     * Without this filter:
+     *   - null elements NPE in EclipseLink's cascade walk at commit time
+     *     ("Transaction marked for rollback")
+     *   - String elements cause CCE on iteration / NPE in EclipseLink because
+     *     getDescriptor(String) returns null
+     *
+     * The proper fix is to wire converter="logTopicConverter" on every
+     * selectCheckboxMenu bound to logTopicList; this filter is defense in
+     * depth in case a binding is added without the converter attribute.
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void setLogTopicList(List<LogTopic> logTopicList) {
-        this.logTopicList = logTopicList;
+        if (logTopicList == null) {
+            this.logTopicList = null;
+            return;
+        }
+        // Iterate as raw Object so a List<String> masquerading as
+        // List<LogTopic> doesn't CCE on the for-each cast.
+        List raw = logTopicList;
+        List<LogTopic> filtered = new ArrayList<>(raw.size());
+        for (Object element : raw) {
+            if (element instanceof LogTopic) {
+                filtered.add((LogTopic) element);
+            }
+            // null and non-LogTopic elements are silently dropped — see javadoc
+        }
+        this.logTopicList = filtered;
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)

@@ -98,7 +98,7 @@ See LICENSE file.
                 </ui:repeat>
             </f:facet>
             <f:facet name="input">
-                <p:selectCheckboxMenu id="topic" value="#{logObject.logTopicList}" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
+                <p:selectCheckboxMenu id="topic" value="#{logObject.logTopicList}" converter="logTopicConverter" styleClass="entityDataText" label="Select categories" filter="true" filterMatchMode="contains">
                     <f:selectItems var="topic" value="#{logTopicController.availableItems}" itemLabel="#{topic.name}" itemValue="#{topic}"/>
                 </p:selectCheckboxMenu>
             </f:facet>
