@@ -8,6 +8,7 @@ import gov.anl.aps.logr.common.exceptions.CdbException;
 import gov.anl.aps.logr.portal.model.db.entities.Log;
 import gov.anl.aps.logr.portal.model.db.beans.LogFacade;
 import gov.anl.aps.logr.portal.model.db.entities.LogLevel;
+import gov.anl.aps.logr.portal.model.db.entities.LogTopic;
 import gov.anl.aps.logr.portal.utilities.SessionUtility;
 import gov.anl.aps.logr.portal.controllers.settings.LogSettings;
 import gov.anl.aps.logr.portal.controllers.utilities.LogControllerUtility;
@@ -15,6 +16,7 @@ import gov.anl.aps.logr.portal.model.LogLazyDataModel;
 import gov.anl.aps.logr.portal.model.db.entities.UserInfo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -98,6 +100,112 @@ public class LogController extends CdbEntityController<LogControllerUtility, Log
     @Override
     protected LogControllerUtility createControllerUtilityInstance() {
         return new LogControllerUtility();
+    }
+
+    public void addTopicToCurrentLog(LogTopic topic) {
+        Log current = getCurrent();
+        if (current == null || topic == null) {
+            return;
+        }
+        current.addLogTopic(topic);
+        try {
+            UserInfo user = (UserInfo) SessionUtility.getUser();
+            getControllerUtility().update(current, user);
+        } catch (CdbException ex) {
+            logger.error("Failed to add topic to log " + current.getId(), ex);
+            SessionUtility.addErrorMessage("Error", "Could not add topic: " + ex.getMessage());
+        }
+    }
+
+    public void removeTopicFromCurrentLog(LogTopic topic) {
+        Log current = getCurrent();
+        if (current == null || topic == null) {
+            return;
+        }
+        current.removeLogTopic(topic);
+        try {
+            UserInfo user = (UserInfo) SessionUtility.getUser();
+            getControllerUtility().update(current, user);
+        } catch (CdbException ex) {
+            logger.error("Failed to remove topic from log " + current.getId(), ex);
+            SessionUtility.addErrorMessage("Error", "Could not remove topic: " + ex.getMessage());
+        }
+    }
+
+    private LogTopic selectedTopicToAdd = null;
+
+    public LogTopic getSelectedTopicToAdd() {
+        return selectedTopicToAdd;
+    }
+
+    public void setSelectedTopicToAdd(LogTopic selectedTopicToAdd) {
+        this.selectedTopicToAdd = selectedTopicToAdd;
+    }
+
+    public void confirmTopicSelected() {
+        if (selectedTopicToAdd != null) {
+            addTopicToCurrentLog(selectedTopicToAdd);
+            selectedTopicToAdd = null;
+        }
+    }
+
+    public void linkLog(Log linkedLog) {
+        Log current = getCurrent();
+        if (current == null || linkedLog == null || current.equals(linkedLog)) {
+            return;
+        }
+        List<Log> linkedList = current.getLinkedLogList();
+        if (linkedList == null) {
+            linkedList = new ArrayList<>();
+            current.setLinkedLogList(linkedList);
+        }
+        if (linkedList.contains(linkedLog)) {
+            return;
+        }
+        linkedList.add(linkedLog);
+        try {
+            UserInfo user = (UserInfo) SessionUtility.getUser();
+            getControllerUtility().update(current, user);
+        } catch (CdbException ex) {
+            logger.error("Failed to link log " + linkedLog.getId() + " to log " + current.getId(), ex);
+            SessionUtility.addErrorMessage("Error", "Could not link log entry: " + ex.getMessage());
+        }
+    }
+
+    public void unlinkLog(Log linkedLog) {
+        Log current = getCurrent();
+        if (current == null || linkedLog == null) {
+            return;
+        }
+        List<Log> linkedList = current.getLinkedLogList();
+        if (linkedList == null || !linkedList.contains(linkedLog)) {
+            return;
+        }
+        linkedList.remove(linkedLog);
+        try {
+            UserInfo user = (UserInfo) SessionUtility.getUser();
+            getControllerUtility().update(current, user);
+        } catch (CdbException ex) {
+            logger.error("Failed to unlink log " + linkedLog.getId() + " from log " + current.getId(), ex);
+            SessionUtility.addErrorMessage("Error", "Could not unlink log entry: " + ex.getMessage());
+        }
+    }
+
+    private Log selectedLinkCandidate = null;
+
+    public Log getSelectedLinkCandidate() {
+        return selectedLinkCandidate;
+    }
+
+    public void setSelectedLinkCandidate(Log selectedLinkCandidate) {
+        this.selectedLinkCandidate = selectedLinkCandidate;
+    }
+
+    public void confirmLinkSelected() {
+        if (selectedLinkCandidate != null) {
+            linkLog(selectedLinkCandidate);
+            selectedLinkCandidate = null;
+        }
     }
 
     /**

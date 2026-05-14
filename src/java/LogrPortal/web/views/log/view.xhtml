@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (c) UChicago Argonne, LLC. All rights reserved.
+See LICENSE file.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../templates/contentViewTemplate.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{settingController.updateGlobalSettings()}" />
+        <f:viewAction action="#{logController.processViewRequestParams}"/>
+    </f:metadata>
+
+    <ui:define name="pageTitle">: Log Entry ##{logController.current.id}</ui:define>
+
+    <ui:define name="middleCenter">
+        <h:form id="logDetailForm">
+            <ui:param name="logEntry" value="#{logController.current}"/>
+            <ui:param name="isWriteable" value="#{loginController.loggedIn}"/>
+
+            <div class="middleCenterLeftContent">
+                <div class="pageTitle">
+                    <h1>Log Entry ##{logEntry.id}</h1>
+                </div>
+
+                <!-- Metadata panel -->
+                <p:panel header="Details" toggleable="true" collapsed="false" styleClass="logDetailMetaPanel">
+                    <p:panelGrid columns="2" styleClass="viewPanelGrid">
+                        <h:outputLabel value="Entered By" styleClass="entityDataEmphasizedLabel"/>
+                        <h:outputText value="#{logEntry.enteredByUser.username}"/>
+
+                        <h:outputLabel value="Entered On" styleClass="entityDataEmphasizedLabel"/>
+                        <h:outputText value="#{logEntry.enteredOnDateTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                        </h:outputText>
+
+                        <h:outputLabel value="Last Modified By" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{logEntry.modifiedEntry}"/>
+                        <h:outputText value="#{logEntry.lastModifiedByUser.username}"
+                                      rendered="#{logEntry.modifiedEntry}"/>
+
+                        <h:outputLabel value="Last Modified On" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{logEntry.modifiedEntry}"/>
+                        <h:outputText rendered="#{logEntry.modifiedEntry}"
+                                      value="#{logEntry.lastModifiedOnDateTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                        </h:outputText>
+
+                        <h:outputLabel value="Effective From" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{logEntry.effectiveFromDateTime != null}"/>
+                        <h:outputText rendered="#{logEntry.effectiveFromDateTime != null}"
+                                      value="#{logEntry.effectiveFromDateTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy"/>
+                        </h:outputText>
+
+                        <h:outputLabel value="Effective To" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{logEntry.effectiveToDateTime != null}"/>
+                        <h:outputText rendered="#{logEntry.effectiveToDateTime != null}"
+                                      value="#{logEntry.effectiveToDateTime}">
+                            <f:convertDateTime pattern="MM/dd/yyyy"/>
+                        </h:outputText>
+
+                        <h:outputLabel value="Parent Entry" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{logEntry.parentLog != null}"/>
+                        <h:outputLink rendered="#{logEntry.parentLog != null}"
+                                      value="view.xhtml?id=#{logEntry.parentLog.id}">
+                            <h:outputText value="Log ##{logEntry.parentLog.id}"/>
+                        </h:outputLink>
+                    </p:panelGrid>
+                </p:panel>
+
+                <!-- Log text -->
+                <p:panel header="Log Entry" toggleable="false" styleClass="logDetailTextPanel" style="margin-top:10px">
+                    <p:outputPanel styleClass="logEntry">
+                        <h:outputText value="#{logEntry.htmlText}" style="display:none;"/>
+                    </p:outputPanel>
+                </p:panel>
+
+                <!-- Attachments -->
+                <p:panel header="Attachments" toggleable="true"
+                         collapsed="#{logEntry.attachmentList == null or logEntry.attachmentList.isEmpty()}"
+                         rendered="#{logEntry.attachmentList != null and !logEntry.attachmentList.isEmpty()}"
+                         style="margin-top:10px">
+                    <ui:repeat var="attachment" value="#{logEntry.attachmentList}">
+                        <div style="margin-bottom:4px">
+                            <h:outputLink value="#{attachment.filePath}"
+                                          target="_blank"
+                                          styleClass="entityDataIcon">
+                                <h:graphicImage alt="Attachment" library="images" name="attachment.ico"/>
+                                <h:outputText value=" #{attachment.displayName}"/>
+                            </h:outputLink>
+                        </div>
+                    </ui:repeat>
+                </p:panel>
+
+                <!-- Replies / child log entries -->
+                <p:panel header="Replies (#{logEntry.childLogList.size()})"
+                         toggleable="true"
+                         collapsed="#{logEntry.childLogList.isEmpty()}"
+                         style="margin-top:10px">
+                    <ui:fragment rendered="#{logEntry.childLogList.isEmpty()}">
+                        <p class="emptyListMessage">No replies.</p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{!logEntry.childLogList.isEmpty()}">
+                        <p:dataList value="#{logEntry.childLogList}" var="childLog" styleClass="logDetailChildList">
+                            <h:outputLink value="view.xhtml?id=#{childLog.id}">
+                                ##{childLog.id}
+                            </h:outputLink>
+                            <h:outputText value=" — #{childLog.enteredByUser.username}, "/>
+                            <h:outputText value="#{childLog.enteredOnDateTime}">
+                                <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                            </h:outputText>
+                            <span style="margin-left:8px">
+                                <h:outputText value="#{childLog.text}" styleClass="logDetailChildPreview"/>
+                            </span>
+                        </p:dataList>
+                    </ui:fragment>
+                </p:panel>
+
+            </div>
+
+            <div class="middleCenterRightContent">
+
+                <!-- Categories panel -->
+                <p:panel header="Categories" toggleable="true" collapsed="false" style="margin-bottom:10px">
+                    <ui:fragment rendered="#{logEntry.logTopicList == null or logEntry.logTopicList.isEmpty()}">
+                        <p class="emptyListMessage">No categories assigned.</p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{logEntry.logTopicList != null and !logEntry.logTopicList.isEmpty()}">
+                        <ui:repeat value="#{logEntry.logTopicList}" var="topic">
+                            <div style="display:inline-block; margin:2px 4px 2px 0;">
+                                <h:outputText value="#{topic.name}" styleClass="logDetailTopicTag"/>
+                                <p:commandButton rendered="#{isWriteable}"
+                                                icon="fa fa-times"
+                                                styleClass="logDetailRemoveBtn"
+                                                action="#{logController.removeTopicFromCurrentLog(topic)}"
+                                                update="logDetailForm"
+                                                title="Remove category"
+                                                style="margin-left:4px"/>
+                            </div>
+                        </ui:repeat>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{isWriteable}">
+                        <div style="margin-top:8px">
+                            <p:selectOneMenu id="addTopicMenu"
+                                             value="#{logController.selectedTopicToAdd}"
+                                             converter="logTopicConverter"
+                                             styleClass="entityDataText">
+                                <f:selectItem itemLabel="Add category..." noSelectionOption="true"/>
+                                <f:selectItems var="topic" value="#{logTopicController.availableItems}"
+                                               itemLabel="#{topic.name}" itemValue="#{topic}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Add"
+                                             icon="fa fa-plus"
+                                             action="#{logController.confirmTopicSelected()}"
+                                             update="logDetailForm"
+                                             style="margin-left:4px"/>
+                        </div>
+                    </ui:fragment>
+                </p:panel>
+
+                <!-- Linked entries panel -->
+                <p:panel header="Linked Entries" toggleable="true" collapsed="false">
+                    <ui:fragment rendered="#{logEntry.linkedLogList == null or logEntry.linkedLogList.isEmpty()}">
+                        <p class="emptyListMessage">No linked entries.</p>
+                    </ui:fragment>
+                    <ui:fragment rendered="#{logEntry.linkedLogList != null and !logEntry.linkedLogList.isEmpty()}">
+                        <ui:repeat value="#{logEntry.linkedLogList}" var="linked">
+                            <div class="linkedLogEntry" style="margin-bottom:12px; border-left:3px solid #ccc; padding-left:10px;">
+                                <div style="font-size:0.85em; color:#555; margin-bottom:4px;">
+                                    <h:outputLink value="view.xhtml?id=#{linked.id}">
+                                        ##{linked.id}
+                                    </h:outputLink>
+                                    <h:outputText value=" — #{linked.enteredByUser.username}, "/>
+                                    <h:outputText value="#{linked.enteredOnDateTime}">
+                                        <f:convertDateTime pattern="MM/dd/yyyy hh:mm a"/>
+                                    </h:outputText>
+                                    <p:commandButton rendered="#{isWriteable}"
+                                                    icon="fa fa-unlink"
+                                                    styleClass="logDetailRemoveBtn"
+                                                    action="#{logController.unlinkLog(linked)}"
+                                                    update="logDetailForm"
+                                                    title="Remove link"
+                                                    style="margin-left:6px"/>
+                                </div>
+                                <p:outputPanel styleClass="logEntry">
+                                    <h:outputText value="#{linked.htmlText}" style="display:none;"/>
+                                </p:outputPanel>
+                            </div>
+                        </ui:repeat>
+                    </ui:fragment>
+
+                    <ui:fragment rendered="#{isWriteable}">
+                        <div style="margin-top:8px">
+                            <p:selectOneMenu id="addLinkMenu"
+                                             value="#{logController.selectedLinkCandidate}"
+                                             filter="true"
+                                             filterMatchMode="contains"
+                                             styleClass="entityDataText">
+                                <f:selectItem itemLabel="Link a log entry..." noSelectionOption="true"/>
+                                <f:selectItems var="candidate" value="#{logController.availableItemsWithoutCurrent}"
+                                               itemLabel="Log ##{candidate.id} — #{candidate.shortDisplayEnteredOnDateTime}"
+                                               itemValue="#{candidate}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Link"
+                                             icon="fa fa-link"
+                                             action="#{logController.confirmLinkSelected()}"
+                                             update="logDetailForm"
+                                             style="margin-left:4px"/>
+                        </div>
+                    </ui:fragment>
+                </p:panel>
+
+            </div>
+
+            <h:outputScript library="javascript" name="logDocumentView.js?v=1"/>
+            <h:outputScript library="javascript" name="codeBlockCopyButton.js"/>
+            <p:remoteCommand autoRun="true" oncomplete="renderLogs(); addCodeBlockCopyButtons();"/>
+
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>

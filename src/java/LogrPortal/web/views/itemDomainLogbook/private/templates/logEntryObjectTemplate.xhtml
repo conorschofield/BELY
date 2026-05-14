@@ -141,6 +141,11 @@ See LICENSE file.
                 </p:dataScroller>
             </p:overlayPanel>
 
+            <h:outputLink value="#{request.contextPath}/views/log/view.xhtml?id=#{logObject.id}"
+                          styleClass="logAction-right fa fa-link-icon fa-external-link" title="View details">
+                <p:tooltip for="@parent" value="Open log entry detail page."/>
+            </h:outputLink>
+
             <p:commandLink id="#{entityTypeName}LogDestroyButton"
                            rendered="#{isEntityWriteable}"
                            styleClass="logAction-right fa fa-link-icon fa-trash" title="Delete"

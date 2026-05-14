@@ -112,7 +112,12 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
         @JoinColumn(name = "log_topic_id", referencedColumnName = "id")})
     @ManyToMany()
     private List<LogTopic> logTopicList;
-    
+    @JoinTable(name = "log_link", joinColumns = {
+        @JoinColumn(name = "log_id", referencedColumnName = "id")}, inverseJoinColumns = {
+        @JoinColumn(name = "linked_log_id", referencedColumnName = "id")})
+    @ManyToMany()
+    private List<Log> linkedLogList;
+
     private static transient SimpleDateFormat shortDisplayDateFormat = new SimpleDateFormat("MM/dd/yy HH:mm");
     private transient String htmlText; 
     
@@ -277,6 +282,31 @@ public class Log extends CdbEntity<LogEntryEvent> implements Serializable {
             // null and non-LogTopic elements are silently dropped — see javadoc
         }
         this.logTopicList = filtered;
+    }
+
+    public void addLogTopic(LogTopic logTopic) {
+        if (logTopicList == null) {
+            logTopicList = new ArrayList<>();
+        }
+        if (!logTopicList.contains(logTopic)) {
+            logTopicList.add(logTopic);
+        }
+    }
+
+    public void removeLogTopic(LogTopic logTopic) {
+        if (logTopicList != null) {
+            logTopicList.remove(logTopic);
+        }
+    }
+
+    @XmlTransient
+    @JsonIgnore
+    public List<Log> getLinkedLogList() {
+        return linkedLogList;
+    }
+
+    public void setLinkedLogList(List<Log> linkedLogList) {
+        this.linkedLogList = linkedLogList;
     }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
