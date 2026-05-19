@@ -120,6 +120,16 @@ See LICENSE file.
                             </span>
                         </p:dataList>
                     </ui:fragment>
+
+                    <ui:fragment rendered="#{isWriteable}">
+                        <div style="margin-top:8px">
+                            <p:commandButton value="Reply"
+                                             icon="fa fa-reply"
+                                             action="#{logController.prepareNewReply()}"
+                                             update="logDetailComposePanel"
+                                             oncomplete="PF('logDetailComposeWidget').show()"/>
+                        </div>
+                    </ui:fragment>
                 </p:panel>
 
             </div>
@@ -197,13 +207,13 @@ See LICENSE file.
                     </ui:fragment>
 
                     <ui:fragment rendered="#{isWriteable}">
-                        <div style="margin-top:8px">
+                        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
                             <p:selectOneMenu id="addLinkMenu"
                                              value="#{logController.selectedLinkCandidate}"
                                              filter="true"
                                              filterMatchMode="contains"
                                              styleClass="entityDataText">
-                                <f:selectItem itemLabel="Link a log entry..." noSelectionOption="true"/>
+                                <f:selectItem itemLabel="Link existing entry..." noSelectionOption="true"/>
                                 <f:selectItems var="candidate" value="#{logController.availableItemsWithoutCurrent}"
                                                itemLabel="Log ##{candidate.id} — #{candidate.shortDisplayEnteredOnDateTime}"
                                                itemValue="#{candidate}"/>
@@ -211,13 +221,66 @@ See LICENSE file.
                             <p:commandButton value="Link"
                                              icon="fa fa-link"
                                              action="#{logController.confirmLinkSelected()}"
-                                             update="logDetailForm"
-                                             style="margin-left:4px"/>
+                                             update="logDetailForm"/>
+                            <p:commandButton value="New Linked Entry"
+                                             icon="fa fa-plus"
+                                             action="#{logController.prepareNewLinkedLog()}"
+                                             update="logDetailComposePanel"
+                                             oncomplete="PF('logDetailComposeWidget').show()"/>
                         </div>
                     </ui:fragment>
                 </p:panel>
 
             </div>
+
+            <!-- Compose dialog: shared by Reply and New Linked Entry -->
+            <p:dialog id="logDetailComposeDialog"
+                      widgetVar="logDetailComposeWidget"
+                      header="#{logController.detailPageLogIsLinked ? 'New Linked Log Entry' : 'Reply'}"
+                      modal="true"
+                      closable="false"
+                      styleClass="viewTransparentBackgroundDialog"
+                      style="width:600px">
+
+                <p:outputPanel id="logDetailComposePanel">
+                    <ui:fragment rendered="#{logController.detailPageNewLog != null}">
+                        <p:panelGrid columns="1" style="width:100%">
+                            <h:inputTextarea id="logDetailComposeText"
+                                             value="#{logController.detailPageNewLog.text}"
+                                             styleClass="logEntryDialogEntryValue"
+                                             style="width:100%; min-height:160px"/>
+                            <p:commandLink value="Markdown Help"
+                                           onclick="PF('markdownExampleDialogWidget').show()"/>
+                            <p:selectCheckboxMenu id="logDetailComposeTopics"
+                                                  value="#{logController.detailPageNewLog.logTopicList}"
+                                                  converter="logTopicConverter"
+                                                  label="Select categories"
+                                                  multiple="true"
+                                                  filter="true"
+                                                  filterMatchMode="contains"
+                                                  styleClass="entityDataText">
+                                <f:selectItems var="topic" value="#{logTopicController.availableItems}"
+                                               itemLabel="#{topic.name}" itemValue="#{topic}"/>
+                            </p:selectCheckboxMenu>
+                        </p:panelGrid>
+                    </ui:fragment>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Save"
+                                     icon="fa fa-save"
+                                     onclick="PF('loadingDialog').show()"
+                                     action="#{logController.saveDetailPageLog()}"
+                                     update="logDetailForm"
+                                     oncomplete="PF('loadingDialog').hide(); PF('logDetailComposeWidget').hide(); renderLogs(); addCodeBlockCopyButtons();"/>
+                    <p:commandButton value="Cancel"
+                                     icon="fa fa-close"
+                                     type="button"
+                                     onclick="PF('logDetailComposeWidget').hide()"
+                                     action="#{logController.cancelDetailPageLog()}"
+                                     update="logDetailComposePanel"/>
+                </f:facet>
+            </p:dialog>
 
             <h:outputScript library="javascript" name="logDocumentView.js?v=1"/>
             <h:outputScript library="javascript" name="codeBlockCopyButton.js"/>
