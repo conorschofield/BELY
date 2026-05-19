@@ -5,10 +5,12 @@
 package gov.anl.aps.logr.portal.controllers;
 
 import gov.anl.aps.logr.common.exceptions.CdbException;
+import gov.anl.aps.logr.portal.model.db.entities.ItemElement;
 import gov.anl.aps.logr.portal.model.db.entities.Log;
 import gov.anl.aps.logr.portal.model.db.beans.LogFacade;
 import gov.anl.aps.logr.portal.model.db.entities.LogLevel;
 import gov.anl.aps.logr.portal.model.db.entities.LogTopic;
+import gov.anl.aps.logr.portal.model.db.utilities.LogUtility;
 import gov.anl.aps.logr.portal.utilities.SessionUtility;
 import gov.anl.aps.logr.portal.controllers.settings.LogSettings;
 import gov.anl.aps.logr.portal.controllers.utilities.LogControllerUtility;
@@ -216,6 +218,94 @@ public class LogController extends CdbEntityController<LogControllerUtility, Log
             linkLog(selectedLinkCandidate);
             selectedLinkCandidate = null;
         }
+    }
+
+    // -------------------------------------------------------------------------
+    // Detail-page compose: reply and new linked log entry
+    // -------------------------------------------------------------------------
+
+    private Log detailPageNewLog = null;
+    private boolean detailPageLogIsLinked = false;
+
+    public Log getDetailPageNewLog() {
+        return detailPageNewLog;
+    }
+
+    public void setDetailPageNewLog(Log log) {
+        this.detailPageNewLog = log;
+    }
+
+    public boolean isDetailPageLogIsLinked() {
+        return detailPageLogIsLinked;
+    }
+
+    /** Opens the compose dialog pre-configured as a reply to the current entry. */
+    public void prepareNewReply() {
+        Log current = getCurrent();
+        if (current == null) {
+            return;
+        }
+        UserInfo user = SessionUtility.getUser();
+        Log reply = LogUtility.createLogEntry(user);
+        reply.setParentLog(current);
+        copyItemElementList(current, reply);
+        detailPageLogIsLinked = false;
+        detailPageNewLog = reply;
+    }
+
+    /** Opens the compose dialog pre-configured as a new entry that will be linked to the current one. */
+    public void prepareNewLinkedLog() {
+        Log current = getCurrent();
+        if (current == null) {
+            return;
+        }
+        UserInfo user = SessionUtility.getUser();
+        Log newLog = LogUtility.createLogEntry(user);
+        copyItemElementList(current, newLog);
+        detailPageLogIsLinked = true;
+        detailPageNewLog = newLog;
+    }
+
+    private void copyItemElementList(Log source, Log dest) {
+        List<ItemElement> src = source.getItemElementList();
+        if (src != null && !src.isEmpty()) {
+            dest.setItemElementList(new ArrayList<>(src));
+        }
+    }
+
+    /** Persists the composed log entry and, for linked mode, links it to the current entry. */
+    public void saveDetailPageLog() {
+        if (detailPageNewLog == null) {
+            return;
+        }
+        UserInfo user = SessionUtility.getUser();
+        try {
+            Log saved = getControllerUtility().saveLogEntry(detailPageNewLog, user);
+            if (detailPageLogIsLinked) {
+                Log current = getCurrent();
+                List<Log> linkedList = current.getLinkedLogList();
+                if (linkedList == null) {
+                    linkedList = new ArrayList<>();
+                    current.setLinkedLogList(linkedList);
+                }
+                linkedList.add(saved);
+                getControllerUtility().update(current, user);
+            }
+            // Refresh current from DB so new reply/linked entry appears
+            Integer currentId = getCurrent().getId();
+            setCurrent(logFacade.find(currentId));
+            detailPageNewLog = null;
+            detailPageLogIsLinked = false;
+        } catch (CdbException ex) {
+            logger.error("Failed to save detail-page log entry", ex);
+            SessionUtility.addErrorMessage("Error", "Could not save log entry: " + ex.getMessage());
+        }
+    }
+
+    /** Dismisses the compose dialog without saving. */
+    public void cancelDetailPageLog() {
+        detailPageNewLog = null;
+        detailPageLogIsLinked = false;
     }
 
     /**
