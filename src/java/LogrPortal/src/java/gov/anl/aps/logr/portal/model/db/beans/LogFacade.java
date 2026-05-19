@@ -105,8 +105,18 @@ public class LogFacade extends CdbEntityFacade<Log> {
         return Long.MIN_VALUE; 
     }
     
-    public static LogFacade getInstance() {
-        return (LogFacade) SessionUtility.findFacade(LogFacade.class.getSimpleName()); 
+    /**
+     * Returns only logs that belong to at least one logbook (item_element_log),
+     * excluding system-generated logs (login events, etc.).
+     */
+    public List<Log> findLogbookLogs() {
+        return (List<Log>) em.createQuery(
+                "SELECT l FROM Log l WHERE l.itemElementList IS NOT EMPTY ORDER BY l.id DESC")
+                .getResultList();
     }
-    
+
+    public static LogFacade getInstance() {
+        return (LogFacade) SessionUtility.findFacade(LogFacade.class.getSimpleName());
+    }
+
 }

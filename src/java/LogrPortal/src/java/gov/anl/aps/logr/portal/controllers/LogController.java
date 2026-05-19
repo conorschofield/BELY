@@ -57,7 +57,17 @@ public class LogController extends CdbEntityController<LogControllerUtility, Log
 
     @Override
     public List<Log> getAvailableItems() {
-        return super.getAvailableItems();
+        return logFacade.findLogbookLogs();
+    }
+
+    @Override
+    public List<Log> getAvailableItemsWithoutCurrent() {
+        List<Log> items = logFacade.findLogbookLogs();
+        Log current = getCurrent();
+        if (current != null && current.getId() != null) {
+            items.remove(current);
+        }
+        return items;
     }
 
     public String getLogRowStyle(Log log) {
