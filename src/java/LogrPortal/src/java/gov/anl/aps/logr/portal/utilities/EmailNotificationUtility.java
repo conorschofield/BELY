@@ -4,6 +4,7 @@
  */
 package gov.anl.aps.logr.portal.utilities;
 
+import gov.anl.aps.logr.portal.controllers.SystemPropertyController;
 import gov.anl.aps.logr.portal.model.db.entities.Log;
 import gov.anl.aps.logr.portal.model.db.entities.LogTopic;
 import gov.anl.aps.logr.portal.model.db.entities.UserInfo;
@@ -136,7 +137,7 @@ public class EmailNotificationUtility {
             List<String> categoryNames) throws MessagingException {
 
         String fromAddress = ConfigurationUtility.getPortalProperty(PROP_FROM, "bely-noreply@localhost");
-        String baseUrl     = ConfigurationUtility.getPortalProperty(PROP_BASE_URL, "");
+        String baseUrl     = resolveBaseUrl();
 
         String categoriesDisplay = String.join(", ", categoryNames);
 
@@ -160,7 +161,8 @@ public class EmailNotificationUtility {
         body.append("Author    : ").append(authorName).append("\n");
         body.append("Posted    : ").append(enteredOn != null ? enteredOn.toString() : "unknown").append("\n");
         if (!baseUrl.isEmpty() && log.getId() != null) {
-            body.append("View      : ").append(baseUrl).append("\n");
+            String trimmed = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
+            body.append("View      : ").append(trimmed).append("/views/log/view.xhtml?id=").append(log.getId()).append("\n");
         }
         body.append("\n");
         body.append("--- Log Entry ---\n");
@@ -176,6 +178,22 @@ public class EmailNotificationUtility {
         msg.setSentDate(new Date());
 
         return msg;
+    }
+
+    private static String resolveBaseUrl() {
+        try {
+            SystemPropertyController ctrl = SystemPropertyController.getInstance();
+            if (ctrl != null) {
+                String url = ctrl.getPermalinkBaseUrl();
+                if (url != null && !url.isEmpty()) {
+                    return url;
+                }
+            }
+        } catch (Exception ex) {
+            logger.debug("Could not resolve permalink base URL from application context: {}", ex.getMessage());
+        }
+        // Fallback to properties file (used when FacesContext is unavailable or DB not configured)
+        return ConfigurationUtility.getPortalProperty(PROP_BASE_URL, "");
     }
 
     /**

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+Copyright (c) UChicago Argonne, LLC. All rights reserved.
+See LICENSE file.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="../../templates/portalViewTemplate.xhtml">
+
+    <f:metadata>
+        <f:viewAction action="#{systemPropertyController.prepareEdit}"/>
+    </f:metadata>
+
+    <ui:define name="pageTitle">: System Settings</ui:define>
+
+    <ui:define name="middleCenter">
+        <h:form id="systemSettingsForm" rendered="#{loginController.loggedInAsAdmin}">
+
+            <div class="pageTitle">
+                <h1>System Settings</h1>
+            </div>
+
+            <p:panel header="Permalink Settings" styleClass="viewPanelGrid" style="max-width:700px;">
+                <p:panelGrid columns="2" styleClass="viewPanelGrid">
+
+                    <h:outputLabel for="permalinkBaseUrl" value="Permalink Base URL"
+                                   styleClass="entityDataEmphasizedLabel"/>
+                    <p:inputText id="permalinkBaseUrl"
+                                 value="#{systemPropertyController.editPermalinkBaseUrl}"
+                                 placeholder="https://bely.example.com/bely"
+                                 styleClass="entityDataText"
+                                 style="width:400px"/>
+
+                </p:panelGrid>
+
+                <p style="margin-top:4px; color:#555; font-size:0.9em;">
+                    Used to build log entry permalinks shown on the detail page and included in email notifications.
+                    Leave blank to disable permalinks.
+                </p>
+
+                <div style="margin-top:12px;">
+                    <p:commandButton value="Save"
+                                     icon="fa fa-save"
+                                     action="#{systemPropertyController.save()}"
+                                     update="systemSettingsForm"
+                                     onclick="PF('loadingDialog').show()"
+                                     oncomplete="PF('loadingDialog').hide()"/>
+                </div>
+            </p:panel>
+
+        </h:form>
+
+        <h:outputText value="Access denied. Admin privileges required."
+                      rendered="#{!loginController.loggedInAsAdmin}"
+                      styleClass="errorText"/>
+    </ui:define>
+
+</ui:composition>

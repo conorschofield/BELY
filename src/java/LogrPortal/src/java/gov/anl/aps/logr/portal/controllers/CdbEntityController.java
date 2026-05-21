@@ -26,6 +26,7 @@ import gov.anl.aps.logr.common.utilities.StringUtility;
 import gov.anl.aps.logr.portal.constants.PortalStyles;
 import gov.anl.aps.logr.portal.controllers.settings.ICdbSettings;
 import gov.anl.aps.logr.portal.controllers.utilities.CdbEntityControllerUtility;
+import gov.anl.aps.logr.portal.controllers.SystemPropertyController;
 import gov.anl.aps.logr.portal.import_export.export.wizard.ItemDomainExportWizard;
 import gov.anl.aps.logr.portal.model.ItemLazyDataModel;
 import gov.anl.aps.logr.portal.utilities.ConfigurationUtility;
@@ -884,11 +885,25 @@ public abstract class CdbEntityController<ControllerUtility extends CdbEntityCon
     public final String getCurrentEntityPermalink() {
         EntityType current = getCurrent();
         if (current != null) {
-            String viewPath = contextRootPermanentUrl;
-            viewPath += getCurrentEntityRelativePermalink();
-            return viewPath;
+            String baseUrl = resolvePermalinkBaseUrl();
+            return baseUrl + getCurrentEntityRelativePermalink();
         }
         return null;
+    }
+
+    private String resolvePermalinkBaseUrl() {
+        try {
+            SystemPropertyController ctrl = SystemPropertyController.getInstance();
+            if (ctrl != null) {
+                String url = ctrl.getPermalinkBaseUrl();
+                if (url != null && !url.isEmpty()) {
+                    return url;
+                }
+            }
+        } catch (Exception ex) {
+            // fall through to properties-file value
+        }
+        return contextRootPermanentUrl != null ? contextRootPermanentUrl : "";
     }
 
     public String getCurrentEntityRelativePermalink() {

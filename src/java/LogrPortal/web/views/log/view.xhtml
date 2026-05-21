@@ -71,6 +71,22 @@ See LICENSE file.
                                       value="view.xhtml?id=#{logEntry.parentLog.id}">
                             <h:outputText value="Log ##{logEntry.parentLog.id}"/>
                         </h:outputLink>
+
+                        <h:outputLabel value="Permalink" styleClass="entityDataEmphasizedLabel"
+                                       rendered="#{systemPropertyController.permalinkConfigured}"/>
+                        <h:panelGroup rendered="#{systemPropertyController.permalinkConfigured}">
+                            <h:outputLink id="permalinkOutput"
+                                          value="#{systemPropertyController.getPermalinkForLog(logEntry.id)}"
+                                          target="_blank">
+                                <h:outputText value="#{systemPropertyController.getPermalinkForLog(logEntry.id)}"/>
+                            </h:outputLink>
+                            <p:commandButton icon="fa fa-copy"
+                                             title="Copy permalink"
+                                             styleClass="logDetailRemoveBtn"
+                                             style="margin-left:6px"
+                                             type="button"
+                                             onclick="navigator.clipboard.writeText('#{systemPropertyController.getPermalinkForLog(logEntry.id)}')"/>
+                        </h:panelGroup>
                     </p:panelGrid>
                 </p:panel>
 

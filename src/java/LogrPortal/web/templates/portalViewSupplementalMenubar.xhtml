@@ -38,8 +38,14 @@ See LICENSE file.
         <p:menuitem value="Sessions"
                     icon="fa fa-connectdevelop"
                     rendered="#{isAdminVersion}"
-                    styleClass="#{fn:startsWith(view.viewId, '/views/system/') ? 'activeMenuItem' : ''} "
-                    url="#{request.contextPath}/views/system/browseSystemSessions" /> 
+                    styleClass="#{(fn:startsWith(view.viewId, '/views/system/') and !fn:endsWith(view.viewId, 'systemSettings.xhtml')) ? 'activeMenuItem' : ''} "
+                    url="#{request.contextPath}/views/system/browseSystemSessions" />
+
+        <p:menuitem value="System Settings"
+                    icon="fa fa-sliders"
+                    rendered="#{isAdminVersion}"
+                    styleClass="#{fn:endsWith(view.viewId, 'systemSettings.xhtml') ? 'activeMenuItem' : ''} "
+                    url="#{request.contextPath}/views/system/systemSettings" />
 
         <p:menuitem value="Logbook Types" 
                     icon="fa fa-indent"

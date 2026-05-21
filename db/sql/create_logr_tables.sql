@@ -1365,3 +1365,17 @@ CREATE TABLE `notification_configuration_handler_setting` (
 --   END
 -- $$
 -- DELIMITER ;
+
+--
+-- Table `system_property`
+--
+
+DROP TABLE IF EXISTS `system_property`;
+CREATE TABLE `system_property` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `value` varchar(512) DEFAULT NULL,
+  `description` varchar(256) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `system_property_u1` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
