@@ -143,7 +143,16 @@ jar cf ../$LOGR_WAR_FILE *
 export AS_JAVA=$JAVA_HOME
 ASADMIN_CMD=$GLASSFISH_DIR/bin/asadmin
 
+#echo "Attempting to undeploy application"
+#$ASADMIN_CMD undeploy $LOGR_CONTEXT_ROOT
+#echo "Attempting to deploy application"
+#$ASADMIN_CMD deploy $LOGR_DIST_DIR/$LOGR_WAR_FILE
+export AS_JAVA=$JAVA_HOME
+export AS_ADMIN_TRUSTSTORE=$GLASSFISH_DIR/glassfish/domains/production/config/cacerts.jks
+export AS_ADMIN_TRUSTSTORE_PASSWORD=changeit
+ASADMIN_CMD=$GLASSFISH_DIR/bin/asadmin
+
 echo "Attempting to undeploy application"
-$ASADMIN_CMD undeploy $LOGR_CONTEXT_ROOT
+$ASADMIN_CMD --secure undeploy $LOGR_CONTEXT_ROOT
 echo "Attempting to deploy application"
-$ASADMIN_CMD deploy $LOGR_DIST_DIR/$LOGR_WAR_FILE
+$ASADMIN_CMD --secure deploy $LOGR_DIST_DIR/$LOGR_WAR_FILE

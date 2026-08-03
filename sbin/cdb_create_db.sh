@@ -155,10 +155,11 @@ for host in $LOGR_DB_ADMIN_HOSTS; do
     echo "GRANT ALL PRIVILEGES ON $LOGR_DB_NAME.* TO '$LOGR_DB_USER'@'$host'
     IDENTIFIED BY '$LOGR_DB_PASSWORD';" >> $sqlFile
 done
-execute "$mysqlCmd < $sqlFile"
+# Commenting out because we already created a Bely user
+#execute "$mysqlCmd < $sqlFile"
 # create db tables
 mysqlCmd="$mysqlCmd -D $LOGR_DB_NAME <"
-execute $mysqlCmd create_logr_tables.sql
+#execute $mysqlCmd create_logr_tables.sql
 execute $mysqlCmd create_views.sql
 
 mysqlUserCmd="$mysqlUserCmd -D $LOGR_DB_NAME <"
